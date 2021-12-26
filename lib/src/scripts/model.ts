@@ -17,6 +17,7 @@ export class Model{
   public root_polygon: Polygon = {} as Polygon;
   public current_root_polygon: Polygon = {} as Polygon;
   public lastFileRead: any;
+  public lastFileNameRead: string = "";
   public fileReloadSelector: number = -1;
   public staticConstruction: boolean = true;
   public staticFontSize: boolean = false;
@@ -25,98 +26,37 @@ export class Model{
   public weight_attribute: string = 'weight'; 
 
 
-  loadExample(ex: number) {
-    this.refresh();
-    let dropdown = document.getElementById('examples-dropdown') as HTMLElement;
-    dropdown.style.display = "none"; 
-
-    if (ex == 1) {
-      json('data/world_gdp.json')
-        .then((jsonData) => {
+  loadJSONFile(name: string){
+    this.refresh()
+    json(name)
+      .then((jsonData) => {
           let root = hierarchy(jsonData);
           this.assignWeights(root.leaves(), this.weight_attribute);
-          this.createTreemap(root);
-          this.fileReloadSelector = 1;
-        })
-        .then(() => {
-        }).catch(() => {
-          window.alert("Could not load GDP example.");
-        });
-    }
-    else if (ex == 2) {
-      csv('data/cars.csv')
-        .then((csvData) => {
-          let root = stratify()
-            .id(function (d:any = {}) { return d.name; })
-            .parentId(function (d:any = {}) { return d.parent; })
-            (csvData);
-          this.assignWeights(root.leaves(), this.weight_attribute);
-          this.createTreemap(root);
+          this.lastFileNameRead = name;
           this.fileReloadSelector = 2;
-        })
-        .then(() => {
-        }).catch(() => {
-          window.alert("Could not load Car example.");
-        });
-    }
-    else if (ex == 3) {
-      json('data/primates.json')
-        .then((jsonData) => {
-            let root = hierarchy(jsonData);
-            this.assignWeights(root.leaves(), this.weight_attribute);
-            this.createTreemap(root);
-            this.fileReloadSelector = 3;
-        })
-        .then(() => {
-        }).catch(() => {
-          window.alert("Could not load Primate example.");
-        });
-    }
-    else if (ex == 4) {
-      csv('data/drugs.csv')
-        .then((csvData) => {
-          let root = stratify()
-            .id(function (d:any = {}) { return d.name; })
-            .parentId(function (d:any = {}) { return d.parent; })
-            (csvData);
-          this.assignWeights(root.leaves(), this.weight_attribute);
           this.createTreemap(root);
-          this.fileReloadSelector = 4;
-        })
-        .then(() => {
-        }).catch(() => {
-          window.alert("Could not load drug example.");
-        });
-    }
-    else if (ex == 5) {
-      csv('data/geoeditors.csv')
-        .then((csvData) => {
-          let root = stratify()
-            .id(function (d:any = {}) { return d.name; })
-            .parentId(function (d:any = {}) { return d.parent; })
-            (csvData);
-          this.assignWeights(root.leaves(), this.weight_attribute);
-          this.createTreemap(root);
-          this.fileReloadSelector = 5;
-        })
-        .then(() => {
-        }).catch(() => {
-          window.alert("Could not load Wikipedia example.");
-        });
-    }
-    else if (ex == 6) {
-      json('data/google_product_taxonomy.json')
-        .then((jsonData) => {
-            let root = hierarchy(jsonData);
-            this.assignWeights(root.leaves(), this.weight_attribute);
-            this.createTreemap(root);
-            this.fileReloadSelector = 6;
-        })
-        .then(() => {
-        }).catch(() => {
-          window.alert("Could not load Google Taxonomy example.");
-        });
-    }
+      })
+      .catch(() => {
+          window.alert("Could not load example.");
+      })
+  }
+
+  loadCSVFile(name: string){
+    this.refresh()
+    csv(name)
+      .then((csvData) => {
+        let root = stratify()
+          .id(function (d:any = {}) { return d.name; })
+          .parentId(function (d:any = {}) { return d.parent; })
+          (csvData);
+        this.assignWeights(root.leaves(), this.weight_attribute);
+        this.lastFileNameRead = name;
+        this.fileReloadSelector = 1;
+        this.createTreemap(root);
+      })
+      .catch(() => {
+        window.alert("Could not load example.");
+      })
   }
 
   createRootPolygon(rootNode: HierarchyNode<any>){
@@ -326,29 +266,14 @@ export class Model{
   }
 
   loadLastData(){
-    switch(this.fileReloadSelector)
-    {
-      case 0:
-        this.computeVoronoi(this.lastFileRead);
-        break;
-      case 1:
-        this.loadExample(this.fileReloadSelector);
-        break;
-      case 2:
-        this.loadExample(this.fileReloadSelector);
-        break;
-      case 3:
-        this.loadExample(this.fileReloadSelector);
-        break;
-      case 4:
-        this.loadExample(this.fileReloadSelector);
-        break;
-      case 5:
-        this.loadExample(this.fileReloadSelector);
-        break;
-      case 6:
-        this.loadExample(this.fileReloadSelector);
-        break;
+    if(this.fileReloadSelector == 0){
+      this.computeVoronoi(this.lastFileRead);
+    }
+    else if(this.fileReloadSelector == 1){
+      this.loadCSVFile(this.lastFileNameRead);
+    }
+    else if(this.fileReloadSelector == 2){
+      this.loadJSONFile(this.lastFileNameRead);
     }
   }
 

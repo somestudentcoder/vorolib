@@ -21,29 +21,63 @@ export class VoroTree{
         window.controller = new Controller();
 
         if(data.split('.').pop() == 'csv'){
-            csv(data)
-              .then((csvData) => {
-                let root = stratify()
-                  .id(function (d:any = {}) { return d.name; })
-                  .parentId(function (d:any = {}) { return d.parent; })
-                  (csvData);
-                model.assignWeights(root.leaves(), model.weight_attribute);
-                model.createTreemap(root);
-              })
-              .catch(() => {
-                window.alert("Could not load example.");
-              })
+            model.loadCSVFile(data);
         }
         else{
-            json(data)
-                .then((jsonData) => {
-                    let root = hierarchy(jsonData);
-                    model.assignWeights(root.leaves(), model.weight_attribute);
-                    model.createTreemap(root);
-            })
-            .catch(() => {
-                window.alert("Could not load example.");
-            })
+            model.loadJSONFile(data);
         }
     }
+
+    openFile(file: any){
+      model.computeVoronoi(file);
+    }
+
+    loadCSVFile(name: string){
+      model.loadCSVFile(name);
+    }
+
+    loadJSONFile(name: string){
+      model.loadJSONFile(name);
+    }
+
+    exportSVG(){
+      controller.takeSVGshot();
+    }
+
+    changeColorScheme(){
+
+    }
+
+    setCellPlacementStatic(flag: boolean){
+      model.setStaticConstruction(flag);
+    }
+
+    setFontSizeStatic(flag: boolean){
+      model.setFontSizeStatic(flag);
+    }
+
+    changeWeightAttribute(){
+
+    }
+
+    setCallbackFunction(){
+
+    }
+
+    getData(){
+      return model.root_polygon;
+    }
+
+    resetView(){
+      view.resetViewpoint();
+    }
+
+    redraw(){
+      view.showTreemap(model.current_root_polygon);
+    }
+
+    resize(w:number, h:number){
+      view.resizeTo(w, h);
+    }
+
 }
