@@ -9,7 +9,6 @@ declare global {
    var model: Model;
    var view: View;
    var controller: Controller;
-   var VoroTree: VoroTree;
 }
 
 export class VoroTree{
@@ -20,13 +19,6 @@ export class VoroTree{
         window.model = new Model();
         window.view = new View(element, w, h);
         window.controller = new Controller();
-
-        if(VTElement.dataset.staticFontSize == 'true'){model.staticFontSize = true}
-        if(VTElement.dataset.weightAttribute != undefined){model.weight_attribute = VTElement.dataset.weightAttribute}
-        if(VTElement.dataset.color != undefined){
-          if(VTElement.dataset.color == 'rainbow'){view.color_selector = 1}
-          else if(VTElement.dataset.color == 'grayscale'){view.color_selector = 2}
-        }
 
         if(data.split('.').pop() == 'csv'){
             csv(data)
@@ -55,7 +47,3 @@ export class VoroTree{
         }
     }
 }
-
-let VTElement = <HTMLElement> document.getElementById('vorotree');
-
-new VoroTree(VTElement.dataset.name!, VTElement.id, parseInt(VTElement.dataset.width!), parseInt(VTElement.dataset.height!));

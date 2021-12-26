@@ -4,14 +4,17 @@
 
 <html>
     <head>
-        <title>VoroTree API Demo</title>
+        <title>VoroLib API Demo</title>
     </head>
 
     <body>
-        <h1>VoroTree API Demo</h1>
+        <h1>VoroLib API Demo</h1>
 
-        <div id="vorotree" data-name="cars.csv" data-width="500" data-height="500"></div>
+        <div id="vorotree"></div>
         
         <script src="vorotree.js"></script>
+        <script>
+            var vt = new VoroLib.VoroTree("cars.csv", "vorotree",500,500)
+        </script>
     </body>
 </html> 
