@@ -78,25 +78,10 @@ export class Model{
   }
 
   setNewColorScheme(colors: string[]){
-    if(colors.length == 1){
-      this.setSingleColor(model.root_polygon, colors[0])
-    }
-    else{
-      let scale = chroma.scale(colors);
-      this.setColorScale(model.root_polygon, scale);
-    }
+    AQUAMARINE = chroma.scale(colors);
+    this.setColorScale(model.root_polygon, AQUAMARINE)
 
     view.showTreemap(model.current_root_polygon);
-  }
-
-  setSingleColor(parent: Polygon, color: string){
-    if(parent.polygon_children.length <= 0){
-      return;
-    }
-    for(let node of parent.polygon_children){
-      node.color[0] = chroma(color).num();
-      this.setSingleColor(node, color);
-    }
   }
 
   setColorScale(parent: Polygon, scale: chroma.Scale<chroma.Color>){
