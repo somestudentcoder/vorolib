@@ -203,6 +203,8 @@ export class View{
     view.width /= window.devicePixelRatio;
     view.resetViewItems();
 
+    view.app.renderer.resize(view.width, view.height)
+
     view.viewport.clampZoom({maxWidth: view.width, maxHeight:view.height})
     view.viewport.resize(view.width, view.height,view.width, view.height);
 
@@ -225,7 +227,7 @@ export class View{
 
   resetViewpoint()
   {
-    view.model.current_root_polygon = model.root_polygon;
+    model.current_root_polygon = model.root_polygon;
     view.active_shapes = [];
     view.text_list = [];
     view.viewport.setZoom(1);

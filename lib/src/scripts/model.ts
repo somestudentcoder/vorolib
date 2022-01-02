@@ -77,6 +77,41 @@ export class Model{
     this.treemapToPolygons(this.root_polygon, rootNode, true)
   }
 
+  setNewColorScheme(colors: string[]){
+    if(colors.length == 1){
+      this.setSingleColor(model.root_polygon, colors[0])
+    }
+    else{
+      let scale = chroma.scale(colors);
+      this.setColorScale(model.root_polygon, scale);
+    }
+
+    view.showTreemap(model.current_root_polygon);
+  }
+
+  setSingleColor(parent: Polygon, color: string){
+    if(parent.polygon_children.length <= 0){
+      return;
+    }
+    for(let node of parent.polygon_children){
+      node.color[0] = chroma(color).num();
+      this.setSingleColor(node, color);
+    }
+  }
+
+  setColorScale(parent: Polygon, scale: chroma.Scale<chroma.Color>){
+    if(parent.polygon_children.length <= 0){
+      return;
+    }
+    for(let node of parent.polygon_children){
+      let c1 = scale(node.center.x / view.width);
+      let c2 = Y_SCALE(node.center.y / view.height);
+      node.color[0] = chroma.mix(c1, c2).num()
+
+      this.setColorScale(node, scale);
+    }
+  }
+
   treemapToPolygons(rootPolygon: Polygon, rootNode: HierarchyNode<unknown>, root: boolean){
     if(rootNode.children == undefined){
       return;
@@ -376,55 +411,5 @@ export class Model{
   setWeightAttribute(value: string){
     this.weight_attribute = value;
     this.loadLastData();
-  }
-
-  setAttributeButtons(leaf: HierarchyNode<any>){
-    let settings_element = document.getElementById('settings-dropdown');
-    let oldbuttons = document.getElementsByClassName('weightedattribute');
-    while(oldbuttons.length > 0){
-      settings_element?.removeChild(oldbuttons[0]);
-    }
-
-    // add no. of children button
-    let element = document.createElement("input");
-    element.onclick = (e) => model.setWeightAttribute('children');
-    element.type = "radio"
-    element.name = "attribute"
-    element.classList.add('radioButtons');
-    element.classList.add('weightedattribute');
-    element.id = "children";
-    element.value = "children";
-
-    let label = document.createElement("label");
-    label.htmlFor = "children";
-    label.appendChild(document.createTextNode('no. of children'));
-    label.classList.add('weightedattribute');
-
-    settings_element?.appendChild(element);
-    settings_element?.appendChild(label);
-
-    //add a button for every available attribute
-    let keys = Object.keys(leaf.data);
-    for (let index = 0; index < keys.length; index++) {
-      if(Number.isFinite(leaf.data[keys[index]]))
-      {
-        let element = document.createElement("input");
-        element.onclick = (e) => model.setWeightAttribute(keys[index]);
-        element.type = "radio"
-        element.name = "attribute"
-        element.classList.add('radioButtons');
-        element.classList.add('weightedattribute');
-        element.id = keys[index];
-        element.value = keys[index];
-
-        let label = document.createElement("label");
-        label.htmlFor = keys[index];
-        label.classList.add('weightedattribute');
-        label.appendChild(document.createTextNode(keys[index]));
-
-        settings_element?.appendChild(element);
-        settings_element?.appendChild(label);
-      }
-    }
   }
 }

@@ -23,7 +23,7 @@ export class VoroTree{
         if(data.split('.').pop() == 'csv'){
             model.loadCSVFile(data);
         }
-        else{
+        else if(data.split('.').pop() == 'json'){
             model.loadJSONFile(data);
         }
     }
@@ -44,8 +44,8 @@ export class VoroTree{
       controller.takeSVGshot();
     }
 
-    changeColorScheme(){
-
+    changeColorScheme(colors: string[]){
+      model.setNewColorScheme(colors);
     }
 
     setCellPlacementStatic(flag: boolean){
