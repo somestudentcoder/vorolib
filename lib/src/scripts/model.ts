@@ -7,9 +7,6 @@ import {csvParse} from "d3-dsv";
 import chroma = require('chroma-js');
 
 var seedrandom = require('seedrandom');
-let AQUAMARINE = chroma.scale(['#80ff80', '#80ff9f', '#80ffbf', '#7fffd4', '#80ffdf', '#80ffff', '#80dfff', '#80bfff']);
-let RAINBOW = chroma.scale(['red', 'orange', 'yellow', 'green', 'turquoise', 'blue', 'purple']);
-let GRAYSCALE = chroma.scale(['#e6e6e6', '#cccccc', '#b3b3b3', '#999999', '#808080', '#737373', '#595959']);
 let Y_SCALE = chroma.scale(['#000000', '#7d7d7d']);
 
 export class Model{
@@ -24,6 +21,9 @@ export class Model{
   public seed: number = Math.random();
   public prng = seedrandom(this.seed);
   public weight_attribute: string = 'weight'; 
+  public colorScale: chroma.Scale = chroma.scale(['#80ff80', '#80ff9f', '#80ffbf', '#7fffd4', '#80ffdf', '#80ffff', '#80dfff', '#80bfff']);
+  public callback: Function = () => {};
+  public callbackFlag: boolean = false;
 
 
   loadJSONFile(name: string){
@@ -36,8 +36,16 @@ export class Model{
           this.fileReloadSelector = 2;
           this.createTreemap(root);
       })
-      .catch(() => {
-          window.alert("Could not load example.");
+      .then(() =>{
+        if(model.callbackFlag){
+          if(model.weight_attribute != 'weight'){model.setWeightAttribute(model.weight_attribute);}
+          model.setNewColorScheme(model.colorScale)
+          controller.setCallbackFunctionToPolygons(model.callback, model.root_polygon);
+          model.callbackFlag = false;
+        }
+      })
+      .catch((e) => {
+        window.alert("Could not load example." + e);
       })
   }
 
@@ -54,8 +62,16 @@ export class Model{
         this.fileReloadSelector = 1;
         this.createTreemap(root);
       })
-      .catch(() => {
-        window.alert("Could not load example.");
+      .then(() =>{
+        if(model.callbackFlag){
+          if(model.weight_attribute != 'weight'){model.setWeightAttribute(model.weight_attribute);}
+          model.setNewColorScheme(model.colorScale)
+          controller.setCallbackFunctionToPolygons(model.callback, model.root_polygon);
+          model.callbackFlag = false;
+        }
+      })
+      .catch((e) => {
+        window.alert("Could not load example." + e);
       })
   }
 
@@ -77,9 +93,8 @@ export class Model{
     this.treemapToPolygons(this.root_polygon, rootNode, true)
   }
 
-  setNewColorScheme(colors: string[]){
-    AQUAMARINE = chroma.scale(colors);
-    this.setColorScale(model.root_polygon, AQUAMARINE)
+  setNewColorScheme(colors: chroma.Scale){
+    this.setColorScale(model.root_polygon, this.colorScale)
 
     view.showTreemap(model.current_root_polygon);
   }
@@ -105,16 +120,10 @@ export class Model{
     for(let node of rootNode.children){
       let poly = this.getPolygon(node);
 
-      let c1 = AQUAMARINE(poly.site.x / view.width);
+      let c1 = this.colorScale(poly.site.x / view.width);
       let c2 = Y_SCALE(poly.site.y / view.height);
       let color1 = chroma.mix(c1, c2).num()
-
-      c1 = RAINBOW(poly.site.x / view.width);
-      c2 = Y_SCALE(poly.site.y / view.height);
       let color2 = chroma.mix(c1, c2).num()
-
-      c1 = GRAYSCALE(poly.site.x / view.width);
-      c2 = Y_SCALE(poly.site.y / view.height);
       let color3 = chroma.mix(c1, c2).num()
 
       let color = [color1, color2, color3]
@@ -198,7 +207,7 @@ export class Model{
 
   }
 
-  async createTreemap(root: HierarchyNode<any>) {
+  createTreemap(root: HierarchyNode<any>) {
     root.sum(function (d: any = {}) {
       return d.weight;
     });
@@ -208,11 +217,11 @@ export class Model{
       this.prng = seedrandom(Math.random());
     }
 
-    var voronoitreemap = await voronoiTreemap() 
+    var voronoitreemap = voronoiTreemap() 
                                       .clip([[0, 0], [0, view.height], [view.width, view.height], [view.width, 0]])
                                       .prng(this.prng);
 
-    await voronoitreemap(root);
+    voronoitreemap(root);
     this.createRootPolygon(root);
     view.showTreemap(this.root_polygon)
   }

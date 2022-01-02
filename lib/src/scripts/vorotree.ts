@@ -1,9 +1,7 @@
-import {csv, json} from "d3-fetch";
-import {hierarchy, HierarchyNode, stratify} from "d3-hierarchy";
 import { Model } from './model';
 import { View } from './view';
 import { Controller } from './controller';
-
+import chroma from 'chroma-js';
 
 declare global {
    var model: Model;
@@ -21,10 +19,10 @@ export class VoroTree{
         window.controller = new Controller();
 
         if(data.split('.').pop() == 'csv'){
-            model.loadCSVFile(data);
+          model.loadCSVFile(data);
         }
         else if(data.split('.').pop() == 'json'){
-            model.loadJSONFile(data);
+          model.loadJSONFile(data);
         }
     }
 
@@ -45,7 +43,14 @@ export class VoroTree{
     }
 
     changeColorScheme(colors: string[]){
-      model.setNewColorScheme(colors);
+      model.colorScale = chroma.scale(colors);
+      try{
+        model.setNewColorScheme(model.colorScale);
+      }
+      catch{
+        model.callbackFlag = true;
+        console.log('[Color] action will be executed once data has loaded.')
+      }
     }
 
     setCellPlacementStatic(flag: boolean){
@@ -56,12 +61,26 @@ export class VoroTree{
       model.setFontSizeStatic(flag);
     }
 
-    changeWeightAttribute(){
-
+    changeWeightAttribute(name: string){
+      try{
+        model.setWeightAttribute(name);
+      }
+      catch{
+        model.weight_attribute = name;
+        model.callbackFlag = true;
+        console.log('[Weight] action will be executed once data has loaded.')
+      }
     }
 
-    setCallbackFunction(){
-
+    setCallbackFunction(fun: Function){
+      try{
+        controller.setCallbackFunctionToPolygons(fun, model.root_polygon);
+      }
+      catch{
+        model.callback = fun;
+        model.callbackFlag = true;
+        console.log('[Callback] action will be executed once data has loaded.')
+      }
     }
 
     getData(){
@@ -79,5 +98,4 @@ export class VoroTree{
     resize(w:number, h:number){
       view.resizeTo(w, h);
     }
-
 }

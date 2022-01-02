@@ -20,6 +20,9 @@ export class Controller{
   {
     for(let child of model.current_root_polygon.polygon_children){
       if (child.hitArea.contains(x, y)) {
+        if(child.functionFlag == true){
+          child.callbackFunction();
+        }
         if(child.polygon_children.length == 0){
           return;
         }
@@ -29,6 +32,9 @@ export class Controller{
     }
     if(model.current_root_polygon != model.root_polygon){
       this.moveTo(model.current_root_polygon.polygon_parent);
+      if(model.current_root_polygon.polygon_parent.functionFlag == true){
+        model.current_root_polygon.polygon_parent.callbackFunction();
+      }
       return;
     }
   }
@@ -134,5 +140,16 @@ export class Controller{
     let y_ratio = (ymax - ymin) / view.viewport.worldScreenHeight;
     let larger_ratio = x_ratio >= y_ratio ? x_ratio : y_ratio;
     return larger_ratio;
+  }
+
+  setCallbackFunctionToPolygons(fun: Function, parent: Polygon){
+    if(parent.polygon_children.length <= 0){return;}
+    for(let node of parent.polygon_children){
+      if(node.polygon_children.length <= 0){
+        node.callbackFunction = fun;
+        node.functionFlag = true;
+      }
+      else{this.setCallbackFunctionToPolygons(fun, node)}
+    }
   }
 }
