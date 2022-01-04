@@ -1,26 +1,201 @@
-# VoroTree API #
+# VoroLib #
 
 ## Quick Start ##
 
-The repository contains an example quickstart scenario for using the VoroTree API including all the necessary parts
-. All you need to run VoroTree on your page is:
+The repository contains an example quickstart scenario for using VoroLib including all the necessary parts. All you need to run a VoroLib
+visualization on your page is:
 
-* An HTML page that includes 'vorotree.js'.
-* A .csv or .json file in the correct format (format explained below).
-* An HTMLElement that has the id 'vorotree' and **must** contain the following attributes:
-  * **data-name** ==> name of the data file.
-  * **data-width** ==> width in pixels you wish the visualization to be.
-  * **data-height** ==> height in pixels you wish the visualization to be.
+* An HTML page that includes 'vorolib.js'.
+* A .csv or .json file with your data in the correct format (format explained below).
+* An HTMLElement that will hold the visualization, i.e. a div.
 
-Once all of this is prepared, you can start up your http server and run VoroTree within your exisiting webpage.
+By calling the VoroTree constructor you can start the visualization on your page:
 
-## Further Options ##
+```js
+  var myVis = new VoroLib.VoroTree(<string>[data-path], <string>[id of HTMLElement], <number>[width], <number>[height])
+```
 
-You can further customize your VoroTree visualization with the following options in your HTMLElement:
+As can be seen in the example call in the repository, an example call could look like:
 
-* **data-staticFontSize** {true} or {false} ==> adjusts font size to the size of the voronoi cell if set to true.
-* **data-weightAttribute** \<string\> ==> name of the weight attribute you wish to use (in case it is not 'weight').
-* **data-color** {aquamarine} or {rainbow} or {grayscale} ==> adjusts color scheme to your preference.
+```js
+  var myVis = new VoroLib.VoroTree("cars.csv", "visualization", 500, 500)
+```
+
+This will give you a standard looking VoroLib visualization within the HTMLElement specified. To further customize, use
+the VoroTree methods listed below.
+
+## Methods ##
+
+* **Open a File**
+
+  ```js
+  myVis.openFile(<any> file);
+  ```
+
+  Opens the specified file taken from an HTML input object. The data will then be loaded into the visualization.
+  Example:
+
+  ```js
+  const inputObject = <HTMLInputElement> document.getElementById("input");
+  inputObject.addEventListener("change", function(){
+    myVis.openFile(inputObject.files);
+  })
+  ```
+
+* **Load .CSV from path**
+
+  ```js
+  myVis.loadCSVFile(<string> file-path);
+  ```
+
+  Opens the specified .csv file at the specified path. The data will then be loaded into the visualization.
+  Example:
+
+  ```js
+  myVis.loadCSVFile("data.csv");
+  ```
+
+* **Load .JSON from path**
+
+  ```js
+  myVis.loadJSONFile(<string> file-path);
+  ```
+
+  Opens the specified .json file at the specified path. The data will then be loaded into the visualization.
+  Example:
+
+  ```js
+  myVis.loadJSONFile("data.json");
+  ```
+
+* **Export current view as SVG**
+
+  ```js
+  myVis.exportSVG();
+  ```
+
+  Draws a SVG of the current view in the visualization and prompt the user to open or download it.
+* **Change color scheme**
+
+  ```js
+  myVis.changeColorScheme(<string[]> color-scheme);
+  ```
+
+  Takes one or more colors in hex to construct a color scale over the 2D space.
+  Example:
+
+    ```js
+    myVis.changeColorScheme(['#ff0000', '#ffb300', '#3afa00']);
+    ```
+
+* **Change cell placement**
+
+  ```js
+  myVis.setCellPlacementStatic(<boolean> value);
+  ```
+
+  Defines if on reloads of the data, the visualization always remains the same (static) or
+  if the visualization varies after each reload. Default is set to true.
+  Example:
+
+  ```js
+  myVis.setCellPlacementStatic(false);
+  ```
+
+* **Change font size**
+
+  ```js
+  myVis.setFontSizeStatic(<boolean> value);
+  ```
+
+  Defines if font size is relative to cell size or is to remain the same over all cells (static).
+  Default is set to false.
+  Example:
+
+  ```js
+  myVis.setFontSizeStatic(true);
+  ```
+
+* **Change weighted attribute**
+
+  ```js
+  myVis.changeWeightAttribute(<string> name of weight attribute);
+  ```
+
+  Defines which attribute in the data is chosen for weighting the visualization. Attribute must be present in the data!
+  Default is 'weight'. If weight is not specified, the size is based on number of children.
+  Example:
+
+  ```js
+  myVis.changeWeightAttribute('age');
+  ```
+
+* **Set a callback function**
+
+  ```js
+  myVis.setCallbackFunction(<Function> cb);
+  ```
+
+  Sets a callback function to leaf cells. The function is called when leaf cells are tapped/clicked.
+  Example:
+
+  ```js
+  myVis.setCallbackFunction(() => {window.alert('hi')});
+  ```
+
+* **Get the data in VoroLib format**
+
+  ```js
+  myVis.getData();
+  ```
+
+  Returns the root Polygon of the visualization, which includes the entire data in VoroLib format.
+  For PIXI methods and members please consult the [PIXI API](https://pixijs.download/dev/docs/PIXI.Graphics.html).
+  Data structure:
+
+  ```js
+  class Polygon extends PIXI.Graphics{
+    public center: Point                    // X and Y coordinates of the center of the polygon.
+    public points: Array<Point>             // The points the polygon is made up of.
+    public polygon_children: Array<Polygon> // All children of this polygon.
+    public polygon_parent: Polygon          // The parent of this polygon.
+    public color: number[]                  // Color array. The color at color[0] is the one that is used for this polygon.
+    public id: number                       // ID of polygon.
+    public name: string                     // Name of polygon.
+    public path: string                     // Path of polygon (only if imported from folder structure).
+    public callbackFunction: Function       // The callback function of this polygon.
+    public functionFlag: boolean            // Boolean that indicates whether cb function is active.
+  }
+  ```
+
+* **Reset the View**
+
+  ```js
+  myVis.resetView();
+  ```
+
+  Sets the visualization to its initial state with the root polygon being in view.
+
+* **Redraw visualization**
+
+  ```js
+  myVis.redraw();
+  ```
+
+  Redraws the visualization in its current state. Can be useful when changing small things and then refreshing without the user noticing.
+
+* **Resize visualization**
+
+  ```js
+  myVis.resize(<number> width, <number> height);
+  ```
+
+  Resizes the visualization and redraws it to the selected width and height.
+  Example:
+
+  ```js
+  myVis.resize(800, 800);
+  ```
 
 ## Data Model ##
 
