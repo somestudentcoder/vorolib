@@ -2,8 +2,10 @@
 
 ## Quick Start ##
 
-The repository contains an example quickstart scenario for using VoroLib including all the necessary parts. All you need to run a VoroLib
-visualization on your page is:
+The repository contains an example quickstart scenario for using VoroLib including all the necessary parts. 
+The example is also hosted under [GitHub Pages](https://somestudentcoder.github.io/vorolib/).
+
+All you need to run a VoroLib visualization on your page is:
 
 * An HTML page that includes 'vorolib.js'.
 * A .csv or .json file with your data in the correct format (format explained below).
