@@ -43,6 +43,10 @@ export class Controller{
     this.downloadImage("screenshot.svg", screenshot);
   }
 
+  getSVGshot(){
+    return view.constructSVG();
+  }
+
   downloadImage(name: string, href: any){
     var link = document.createElement('a');
     link.download = name;

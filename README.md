@@ -71,6 +71,18 @@ the VoroTree methods listed below.
   myVis.loadJSONFile("data.json");
   ```
 
+* **Get current view as SVG**
+
+  ```js
+  myVis.getSVG();
+  ```
+
+  Draws and returns a SVG of the current view in the visualization. Example:
+
+  ```js
+  let svg = myVis.getSVG();
+  ```
+
 * **Export current view as SVG**
 
   ```js
@@ -198,6 +210,43 @@ the VoroTree methods listed below.
 
   ```js
   myVis.resize(800, 800);
+  ```
+
+## Gulp Commands ##
+
+Commands should be run under a **bash** shell.
+
+The following command runs a http server under /docs to demonstrate the example locally.
+
+  ```bash
+  $> npx gulp serve
+  ```
+
+The following command builds VoroLib to the dist folder.
+
+  ```bash
+  $> npx gulp build
+  ```
+
+The following command cleans the "dist" folder which includes the bundled source code.
+
+  ```bash
+  $> npx gulp clean
+  ```
+
+The following command cleans the "dist" folder which includes the bundled source code,
+as well as the "node_modules" folder.
+
+  ```bash
+  $> npx gulp cleanAll
+  ```
+
+The following command contstructs a .json dataset from a specified folder. This folder
+can then be viewed and navigated within VoroTree. Specify input folder and output name
+in the "/data/folderdatasetconfig.js" file.
+
+  ```bash
+  $> npx gulp constructFolderDataset
   ```
 
 ## Data Model ##

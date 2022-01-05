@@ -42,6 +42,10 @@ export class VoroTree{
       controller.takeSVGshot();
     }
 
+    getSVG(){
+      return controller.getSVGshot();
+    }
+
     changeColorScheme(colors: string[]){
       model.colorScale = chroma.scale(colors);
       try{
