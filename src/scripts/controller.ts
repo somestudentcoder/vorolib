@@ -1,6 +1,5 @@
 import { Polygon } from './polygon';
 import * as PIXI from 'pixi.js';
-import { desktopCapturer } from 'electron';
 
 //this decides how large a polygon must be on screen to be entered. (using wheel/pinch)
 let ZOOMDIMENSIONRATIO = 0.50;

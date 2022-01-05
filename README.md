@@ -2,8 +2,8 @@
 
 ## Quick Start ##
 
-The repository contains an example quickstart scenario for using VoroLib including all the necessary parts. 
-The example is also hosted under [GitHub Pages](https://somestudentcoder.github.io/vorolib/).
+The repository contains an example quickstart scenario for using VoroLib including all the necessary parts. The
+example can be found in the /docs folder and is also hosted under [GitHub Pages](https://somestudentcoder.github.io/vorolib/).
 Please note that the webpage must be hosted in an http server, otherwise Cross-Origin protocols will stop VoroLib from loading.
 
 All you need to run a VoroLib visualization on your page is:
