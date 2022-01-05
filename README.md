@@ -4,6 +4,7 @@
 
 The repository contains an example quickstart scenario for using VoroLib including all the necessary parts. 
 The example is also hosted under [GitHub Pages](https://somestudentcoder.github.io/vorolib/).
+Please note that the webpage must be hosted in an http server, otherwise Cross-Origin protocols will stop VoroLib from loading.
 
 All you need to run a VoroLib visualization on your page is:
 
@@ -152,7 +153,7 @@ the VoroTree methods listed below.
   ```
 
   Returns the root Polygon of the visualization, which includes the entire data in VoroLib format.
-  For PIXI methods and members please consult the [PIXI API](https://pixijs.download/dev/docs/PIXI.Graphics.html).
+  For PIXI methods and members please consult the [PixiJS API](https://pixijs.download/dev/docs/PIXI.Graphics.html).
   Data structure:
 
   ```js
