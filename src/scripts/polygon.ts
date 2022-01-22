@@ -12,7 +12,7 @@ export class Polygon extends PIXI.Graphics{
   //public weight: number = -1;
   public name: string = "";
   public path: string = "";
-  public callbackFunction: Function = () => {};
+  public callbackFunction: (polygon: Polygon) => void = (polygon: Polygon) => {};
   public functionFlag: boolean = false;
 
   static from(d3_poly: Delaunay.Polygon, center_: Point, parent_?: Polygon, color_?: number[], path_?: string){

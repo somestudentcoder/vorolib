@@ -2,6 +2,7 @@ import { Model } from './model';
 import { View } from './view';
 import { Controller } from './controller';
 import chroma from 'chroma-js';
+import { Polygon } from './polygon';
 
 declare global {
    var model: Model;
@@ -76,7 +77,7 @@ export class VoroTree{
       }
     }
 
-    setCallbackFunction(fun: Function){
+    setCallbackFunction(fun: (polygon: Polygon) => void){
       try{
         controller.setCallbackFunctionToPolygons(fun, model.root_polygon);
       }

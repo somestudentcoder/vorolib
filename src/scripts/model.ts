@@ -22,7 +22,7 @@ export class Model{
   public prng = seedrandom(this.seed);
   public weight_attribute: string = 'weight'; 
   public colorScale: chroma.Scale = chroma.scale(['#80ff80', '#80ff9f', '#80ffbf', '#7fffd4', '#80ffdf', '#80ffff', '#80dfff', '#80bfff']);
-  public callback: Function = () => {};
+  public callback: (polygon: Polygon) => void = (polygon: Polygon) => {};
   public callbackFlag: boolean = false;
 
 
