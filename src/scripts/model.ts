@@ -24,6 +24,7 @@ export class Model{
   public colorScale: chroma.Scale = chroma.scale(['#80ff80', '#80ff9f', '#80ffbf', '#7fffd4', '#80ffdf', '#80ffff', '#80dfff', '#80bfff']);
   public callback: (polygon: Polygon) => void = (polygon: Polygon) => {};
   public callbackFlag: boolean = false;
+  public fileIconFlag: boolean = false;
 
 
   loadJSONFile(name: string){
@@ -131,7 +132,9 @@ export class Model{
       let new_poly = Polygon.from(poly, poly.site, rootPolygon, color, this.getPath(node.data));
       new_poly.polygon_parent = rootPolygon;
       new_poly.name = this.getName(node.data);
-      this.checkName(new_poly);
+      if(this.fileIconFlag){
+        this.checkName(new_poly);
+      }
 
       //new_poly.weight = this.calculateWeight(node);
 
@@ -404,6 +407,11 @@ export class Model{
 
   setWeightAttribute(value: string){
     this.weight_attribute = value;
+    this.loadLastData();
+  }
+
+  setFileIconFlag(value: boolean){
+    this.fileIconFlag = value;
     this.loadLastData();
   }
 }

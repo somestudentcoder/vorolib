@@ -103,4 +103,8 @@ export class VoroTree{
     resize(w:number, h:number){
       view.resizeTo(w, h);
     }
+
+    activateFileIcons(value: boolean){
+      model.setFileIconFlag(value);
+    }
 }
