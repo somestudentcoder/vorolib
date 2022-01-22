@@ -148,14 +148,17 @@ the VoroTree methods listed below.
 * **Set a callback function**
 
   ```js
-  myVis.setCallbackFunction(<Function> cb);
+  myVis.setCallbackFunction((polygon: Polygon) => void);
   ```
 
-  Sets a callback function to leaf cells. The function is called when leaf cells are tapped/clicked.
+  Sets a callback function to Voronoi cells. The function is called
+  when Voronoi cells are tapped/clicked. The polygon parameter is the
+  Polygon object of the clicked cell.
+
   Example:
 
   ```js
-  myVis.setCallbackFunction(() => {window.alert('hi')});
+  myVis.setCallbackFunction((polygon: Polygon) => {window.alert(polygon.name)});
   ```
 
 * **Get the data in VoroLib format**
@@ -211,6 +214,14 @@ the VoroTree methods listed below.
   ```js
   myVis.resize(800, 800);
   ```
+
+* **Activate Emoji Icons**
+
+  ```js
+  myVis.activateFileIcons(<boolean> value);
+  ```
+
+  When set to true, adds Icons to nodes with file type endings.
 
 ## Gulp Commands ##
 
