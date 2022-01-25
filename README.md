@@ -158,7 +158,7 @@ the VoroTree methods listed below.
   Example:
 
   ```js
-  myVis.setCallbackFunction((polygon: Polygon) => {window.alert(polygon.name)});
+  myVis.setCallbackFunction((polygon) => {window.alert(polygon.name)});
   ```
 
 * **Get the data in VoroLib format**
