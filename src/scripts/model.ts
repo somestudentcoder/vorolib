@@ -24,6 +24,8 @@ export class Model{
   public colorScale: chroma.Scale = chroma.scale(['#80ff80', '#80ff9f', '#80ffbf', '#7fffd4', '#80ffdf', '#80ffff', '#80dfff', '#80bfff']);
   public callback: (polygon: Polygon) => void = (polygon: Polygon) => {};
   public callbackFlag: boolean = false;
+  public colorFlag: boolean = false;
+  public weightFlag: boolean = false;
   public fileIconFlag: boolean = false;
 
 
@@ -38,11 +40,21 @@ export class Model{
           this.createTreemap(root);
       })
       .then(() =>{
-        if(model.callbackFlag){
-          if(model.weight_attribute != 'weight'){model.setWeightAttribute(model.weight_attribute);}
+        if(model.colorFlag){
           model.setNewColorScheme(model.colorScale)
+          model.colorFlag = false;
+        }
+      })
+      .then(() =>{
+        if(model.callbackFlag){
           controller.setCallbackFunctionToPolygons(model.callback, model.root_polygon);
           model.callbackFlag = false;
+        }
+      })
+      .then(() =>{
+        if(model.weightFlag){
+          if(model.weight_attribute != 'weight'){model.setWeightAttribute(model.weight_attribute);}
+          model.weightFlag = false;
         }
       })
       .catch((e) => {
@@ -64,11 +76,21 @@ export class Model{
         this.createTreemap(root);
       })
       .then(() =>{
-        if(model.callbackFlag){
-          if(model.weight_attribute != 'weight'){model.setWeightAttribute(model.weight_attribute);}
+        if(model.colorFlag){
           model.setNewColorScheme(model.colorScale)
+          model.colorFlag = false;
+        }
+      })
+      .then(() =>{
+        if(model.callbackFlag){
           controller.setCallbackFunctionToPolygons(model.callback, model.root_polygon);
           model.callbackFlag = false;
+        }
+      })
+      .then(() =>{
+        if(model.weightFlag){
+          if(model.weight_attribute != 'weight'){model.setWeightAttribute(model.weight_attribute);}
+          model.weightFlag = false;
         }
       })
       .catch((e) => {

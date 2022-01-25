@@ -53,7 +53,7 @@ export class VoroTree{
         model.setNewColorScheme(model.colorScale);
       }
       catch{
-        model.callbackFlag = true;
+        model.colorFlag = true;
         console.log('[Color] action will be executed once data has loaded.')
       }
     }
@@ -72,7 +72,7 @@ export class VoroTree{
       }
       catch{
         model.weight_attribute = name;
-        model.callbackFlag = true;
+        model.weightFlag = true;
         console.log('[Weight] action will be executed once data has loaded.')
       }
     }
