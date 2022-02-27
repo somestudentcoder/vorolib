@@ -6,7 +6,7 @@ const config = {
     mode: isDev ? 'development' : 'production',
     entry: './src/scripts/vorotree.ts',
     output: {
-        path: path.resolve(__dirname, './src/dist'),
+        path: path.resolve(__dirname, './dist'),
         filename: 'vorolib.js',
         libraryTarget: 'var',
         library: 'VoroLib'
